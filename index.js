@@ -119,12 +119,16 @@ const mutation = new GraphQLObjectType({
       },
       resolve(parent, { id }) {
         const deletedUser = UserList.find((user) => user.id === parseInt(id));
-        console.log(deletedUser);
-        UserList = UserList.filter((user) => user.id !== parseInt(id));
-        return {
-          ...deletedUser,
-          message: "User deleted sucessfully",
-        };
+        if (!deletedUser) {
+          throw new Error(`User of id : ${id} not Found`);
+        } else {
+          UserList = UserList.filter((user) => user.id !== parseInt(id));
+          return {
+            ...deletedUser,
+            message: "User deleted sucessfully",
+          };
+        }
+        // console.log(deletedUser);
       },
     },
     updateUser: {
